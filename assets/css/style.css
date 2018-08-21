@@ -1,0 +1,5 @@
+.question:hover {
+	background: #ffc107; /* warning */
+	cursor: pointer;
+}
+
