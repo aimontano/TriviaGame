@@ -31,7 +31,7 @@ $(document).ready(function(){
 	$('#start').click(function(evt){
 		// console.log(questions);
 		// evt.stopPropagation();
-		$('#content').load('./templates/questions.html', function(){
+		$('#content').load('./TriviaGame/templates/questions.html', function(){
 			displayQuestion();
 			intevalId = setInterval(function(){
 				displayQuestion();
