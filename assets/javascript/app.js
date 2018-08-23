@@ -54,10 +54,10 @@ $(document).ready(function(){
 
 	$('#start').click(function(evt){
 		
-		$('#content').load('../templates/questions.html', function(){
+		$('#content').load('./templates/questions.html', function(){
 			getQuestions();
 			decrementTime();
-
+			
 			displayQuestion();
 			displayTime();
 
