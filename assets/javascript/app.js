@@ -18,25 +18,54 @@ $(document).ready(function(){
 		questions = res;
 	});
 
+	// functions is called from interval
 	const decrementTime = () => {
+		// display seconds available to user
 		$('.badge').text(" Seconds left: " + secondsAvailable);
-		secondsAvailable--;
+		secondsAvailable--; // decrement seconds
 		if(secondsAvailable === 0) {
 			secondsAvailable = 10;
+		}
+	};
+
+	const getIndex = () => {
+		// let choicesAvailable = 4;
+		let choice = [];
+
+		while(true){
+			let randomIndex = Math.floor(Math.random() * answerChoices.length);
+			if(choice.indexOf(randomIndex) < 0) {
+				choice.push(randomIndex);
+				if(choice.length === 4){
+					break;
+				}
+			}
+		}
+
+		return choice;
+	};
+
+	const getAnswerChoices = () => {
+		answerChoices = [];
+		answerChoices.push(questions.results[index].incorrect_answers[0]);
+		answerChoices.push(questions.results[index].incorrect_answers[1]);
+		answerChoices.push(questions.results[index].incorrect_answers[2]);
+		answerChoices.push(questions.results[index].correct_answer);
+
+		let choiceIndex = getIndex();
+
+		for(let i = 0; i < answerChoices.length; i++){
+			$('#choice' + (i + 1)).html(answerChoices[choiceIndex[i]]);
 		}
 	};
 
 	const getQuestions = () => {
 		if (index < 10){ 
 			$('#question').html(questions.results[index].question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
-			$('#choice1').html(questions.results[index].incorrect_answers[0]);
-			$('#choice2').html(questions.results[index].incorrect_answers[1]);
-			$('#choice3').html(questions.results[index].incorrect_answers[2]);
-			$('#choice4').html(questions.results[index].correct_answer);
-
+			getAnswerChoices();
 			index++;
 		} else {
-			// clearInterval(intervalId);
+			clearInterval(intervalId);
 			index = 0;
 		}	
 	};	
@@ -53,7 +82,6 @@ $(document).ready(function(){
 	};
 
 	$('#start').click(function(evt){
-		
 		$('#content').load('./templates/questions.html', function(){
 			getQuestions();
 			decrementTime();
@@ -66,7 +94,6 @@ $(document).ready(function(){
 				console.log(this.textContent);
 			});
 
-			console.log(questions.results[0].correct_answer);
 		});
 	});
 	
