@@ -10,6 +10,9 @@ $(document).ready(function(){
 	let counterId;  // timer counter interval
 
 	let hasGuessed = false; // user can only guess once
+	let correctGuess = 0; // stores user correct guesses
+	let incorrectGuess = 0; // stores user incorrect guesses
+	let notAnswered = 0; // stores user not answered questions
 
 	// query url for getting the random questions 
 	let queryUrl = "https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple";
@@ -93,26 +96,27 @@ $(document).ready(function(){
 		intevalId = setInterval(getQuestions, 1000 * 10);
 	};
 
-	$('#start').click(function(evt){
+	// when user clicks on start button
+	$('#start').click(function(){
+		// load questions.html template with questions
 		$('#content').load('./templates/questions.html', function(){
-			getQuestions();
-			decrementTime();
+			getQuestions(); // display question on template
+			decrementTime(); // start counting down 
 			
-			questionDelay();
-			displayTime();
+			questionDelay(); // start question countdown
+			displayTime(); // display time remaining
 
-			$('.list-group-item').click(function(e){
-				e.stopPropagation();
-				let userGuess = this.textContent;
-				
+			// if user clicks on one of the choices
+			$('.list-group-item').click(function(){
+				let userGuess = this.textContent; // store uses guess
+				// check if user guess is correct
 				if(userGuess == correctAnswer && !hasGuessed) {
-					$(this).css('background-color', '#28a745');
-					hasGuessed = true;
-				} else  if(userGuess != correctAnswer && !hasGuessed){
-					$(this).css('background-color', '#dc3545');
-					hasGuessed = true;
+					$(this).css('background-color', '#28a745'); // set choice background to green
+					hasGuessed = true; // don't let user guess again for current question
+				} else  if(userGuess != correctAnswer && !hasGuessed){ // if user guess incorrect
+					$(this).css('background-color', '#dc3545'); // set choice background to red
+					hasGuessed = true; // don't let user guess again
 				}
-				console.log(this.textContent);
 			});
 
 		});
