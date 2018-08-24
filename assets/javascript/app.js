@@ -56,8 +56,6 @@ $(document).ready(function(){
 		answerChoices.push(questions.results[index].incorrect_answers[2]);
 		answerChoices.push(questions.results[index].correct_answer);
 
-		correctAnswer = questions.results[index].correct_answer;
-
 		let choiceIndex = getIndex();
 
 		for(let i = 0; i < answerChoices.length; i++){
@@ -74,13 +72,15 @@ $(document).ready(function(){
 	// function display questions 
 	const getQuestions = () => {
 		if (index < 10){ 
+			let question = questions.results[index].question;
 			resetStyle();
-			$('#question').html(questions.results[index].question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
+			$('#question').html(question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
+				correctAnswer = questions.results[index].correct_answer;
 				getAnswerChoices();
 			index++;
 		} else {
 			clearInterval(intervalId);
-			index = 0;
+			// index = 0;
 		}	
 	};	
 
@@ -94,6 +94,14 @@ $(document).ready(function(){
 	const questionDelay = () => {
 		clearInterval(intervalId);
 		intevalId = setInterval(getQuestions, 1000 * 10);
+	};
+
+	const displayCorrectAnswer = () => {
+		for(let i = 0; i < answerChoices.length; i++) {
+			if($('#choice' + (i + 1)).text() == correctAnswer){
+				$('#choice' + (i + 1)).css('background-color', '#28a745');
+			}
+		}
 	};
 
 	// when user clicks on start button
@@ -116,6 +124,9 @@ $(document).ready(function(){
 				} else  if(userGuess != correctAnswer && !hasGuessed){ // if user guess incorrect
 					$(this).css('background-color', '#dc3545'); // set choice background to red
 					hasGuessed = true; // don't let user guess again
+					setTimeout(function(){
+						displayCorrectAnswer();
+					}, 500);
 				}
 			});
 
