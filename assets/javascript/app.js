@@ -6,7 +6,6 @@ $(document).ready(function(){
 	let index = 0; // index of questions object array
 	let secondsAvailable = 10; // seconds available
 
-	let intervalId; // first interval for displaying questions interval
 	let counterId;  // timer counter interval
 
 	let hasGuessed = false; // user can only guess once
@@ -23,26 +22,18 @@ $(document).ready(function(){
 		questions = res;
 	});
 
-	// functions is called from interval
-	const decrementTime = () => {
-		// display seconds available to user
-		$('.badge').text(" Seconds left: " + secondsAvailable);
-		secondsAvailable--; // decrement seconds
-		if(secondsAvailable === 0) {
-			secondsAvailable = 10;
-		}
-	};
-
 	// function returns an array with random index number 
 	const getIndex = () => {
-		let choice = [];
-		while(true){
+		let choice = []; // create an empty array
+		while(true){ // start an infinite while loop
+			// create a random number between 1 and number of answer choices each time it loops 
 			let randomIndex = Math.floor(Math.random() * answerChoices.length);
+			// if random number is not in the array 
 			if(choice.indexOf(randomIndex) < 0) {
-				choice.push(randomIndex);
-				if(choice.length === 4){
-					break;
-				}
+				choice.push(randomIndex); // append random number to the array
+				if(choice.length === 4){ // once it array contains 4 items
+					break; // stop loop
+				}  
 			}
 		}
 		return choice;
@@ -76,13 +67,22 @@ $(document).ready(function(){
 			resetStyle();
 			$('#question').html(question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
 				correctAnswer = questions.results[index].correct_answer;
-				getAnswerChoices();
+			getAnswerChoices();
+			decrementTime();
+			displayTime();
 			index++;
-		} else {
-			clearInterval(intervalId);
-			// index = 0;
-		}	
+		} 
 	};	
+
+	// functions is called from interval
+	const decrementTime = () => {
+		// display seconds available to user
+		$('.badge').text(" Seconds left: " + secondsAvailable);
+		secondsAvailable--; // decrement seconds
+		if(secondsAvailable === 0) {
+			secondsAvailable = 10;
+		}
+	};
 
 	// function displays time remaining
 	const displayTime = () => {
@@ -90,11 +90,6 @@ $(document).ready(function(){
 		counterId = setInterval(decrementTime, 1000);
 	};
 
-	// function displays questions to document
-	const questionDelay = () => {
-		clearInterval(intervalId);
-		intevalId = setInterval(getQuestions, 1000 * 10);
-	};
 
 	const displayCorrectAnswer = () => {
 		for(let i = 0; i < answerChoices.length; i++) {
@@ -109,10 +104,6 @@ $(document).ready(function(){
 		// load questions.html template with questions
 		$('#content').load('./templates/questions.html', function(){
 			getQuestions(); // display question on template
-			decrementTime(); // start counting down 
-			
-			questionDelay(); // start question countdown
-			displayTime(); // display time remaining
 
 			// if user clicks on one of the choices
 			$('.list-group-item').click(function(){
