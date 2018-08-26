@@ -105,21 +105,22 @@ $(document).ready(function(){
 		$('.list-group-item').css('background-color', 'white');
 	};
 
-	// functions shows the result
-	const getResult = () => {
-		hasResult = true; // tells program user has the result
-		secondsAvailable = 10; // gives time for user to look at results
-		displayTime(); // display time
-		decrementTime(); // start counting down
-		$('#correct').text(correctGuess); // display correct guesses
-		$('#incorrect').text(incorrectGuess); // display incorrect guesses
-		$('#unanswered').text(notAnswered); // display unanswered questions
-	};
-
 	// function displays result
 	const displayResult = () => {
 		// loads template and gets the results to display to user
-		$('#content').load('./templates/result.html', getResult);
+		$('#content').load('./templates/result.html', function(){
+			hasResult = true; // tells program user has the result
+			secondsAvailable = 10; // gives time for user to look at results
+			displayTime(); // display time
+			decrementTime(); // start counting down
+			$('#correct').text(correctGuess); // display correct guesses
+			$('#incorrect').text(incorrectGuess); // display incorrect guesses
+			$('#unanswered').text(notAnswered); // display unanswered questions	
+			// when user clicks on start over button start game
+			$('#btnStartOver').click(function(){ 
+				secondsAvailable = 0; // set seconds to 0 to start game over
+			});				
+		});
 	};
 
 	// function display questions 
@@ -129,7 +130,7 @@ $(document).ready(function(){
 			let question = questions.results[index].question; // store question in variable
 			correctAnswer = questions.results[index].correct_answer; // store correct answer in variable
 			// display question & seconds available
-			$('#question').html(question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
+			$('#question').html((index + 1) + ". " + question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
 
 			getAnswerChoices(); // get answer choices
 			displayTime(); // display time
@@ -171,8 +172,6 @@ $(document).ready(function(){
 				getQuestions(); // get another question 
 			}, 1000);
 		}  
-
-		
 		secondsAvailable--; // decrement seconds
 	};
 
@@ -193,11 +192,6 @@ $(document).ready(function(){
 		}
 	};
 
-	// when user clicks on start button
-	$('#start').click(function(){
-		// load questions.html template with questions
-		startGame();
-	});
-	
-	
+	// when user clicks on start button start game
+	$('#start').click(startGame);
 });
