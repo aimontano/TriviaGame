@@ -14,7 +14,7 @@ $(document).ready(function(){
 	let notAnswered = 0; // stores user not answered questions
 
 	// query url for getting the random questions 
-	let queryUrl = "https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple";
+	let queryUrl = "https://opentdb.com/api.php?amount=20&category=18&difficulty=easy&type=multiple";
 
 	// ajax request  to get all the questions
 	$.get(queryUrl, function(res){
@@ -41,7 +41,7 @@ $(document).ready(function(){
 
 	// function displays answer choices randomly
 	const getAnswerChoices = () => {
-		answerChoices = [];
+		answerChoices = []; // resets every time is called
 		answerChoices.push(questions.results[index].incorrect_answers[0]);
 		answerChoices.push(questions.results[index].incorrect_answers[1]);
 		answerChoices.push(questions.results[index].incorrect_answers[2]);
@@ -50,7 +50,6 @@ $(document).ready(function(){
 		let choiceIndex = getIndex();
 
 		for(let i = 0; i < answerChoices.length; i++){
-			console.log(choiceIndex[i]);
 			$('#choice' + (i + 1)).html(answerChoices[choiceIndex[i]]);
 		}
 	};
@@ -62,14 +61,19 @@ $(document).ready(function(){
 
 	// function display questions 
 	const getQuestions = () => {
+		resetStyle();
 		if (index < 10){ 
 			let question = questions.results[index].question;
-			resetStyle();
+			correctAnswer = questions.results[index].correct_answer;
+
+			console.log(correctAnswer);
+
 			$('#question').html(question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
-				correctAnswer = questions.results[index].correct_answer;
+
 			getAnswerChoices();
 			decrementTime();
 			displayTime();
+
 			index++;
 		} 
 	};	
@@ -78,10 +82,22 @@ $(document).ready(function(){
 	const decrementTime = () => {
 		// display seconds available to user
 		$('.badge').text(" Seconds left: " + secondsAvailable);
-		secondsAvailable--; // decrement seconds
-		if(secondsAvailable === 0) {
+
+		if(hasGuessed){
+			clearInterval(counterId);
 			secondsAvailable = 10;
+			setTimeout(function(){
+				getQuestions();
+			}, 1300);
 		}
+
+		if(secondsAvailable === 0) { // if user has run out of time
+			setTimeout(function(){ // wait a second
+				secondsAvailable = 10; // reset seconds available to 10
+				getQuestions(); // get another question 
+			}, 1000);
+		}
+		secondsAvailable--; // decrement seconds
 	};
 
 	// function displays time remaining
@@ -89,7 +105,6 @@ $(document).ready(function(){
 		clearInterval(counterId);
 		counterId = setInterval(decrementTime, 1000);
 	};
-
 
 	const displayCorrectAnswer = () => {
 		for(let i = 0; i < answerChoices.length; i++) {
@@ -107,18 +122,21 @@ $(document).ready(function(){
 
 			// if user clicks on one of the choices
 			$('.list-group-item').click(function(){
-				let userGuess = this.textContent; // store uses guess
+				let userGuess = $(this).text(); // store uses guess
+
+							
 				// check if user guess is correct
 				if(userGuess == correctAnswer && !hasGuessed) {
-					$(this).css('background-color', '#28a745'); // set choice background to green
 					hasGuessed = true; // don't let user guess again for current question
-				} else  if(userGuess != correctAnswer && !hasGuessed){ // if user guess incorrect
+					$(this).css('background-color', '#28a745'); // set choice background to green
+				} 
+				if(userGuess != correctAnswer && !hasGuessed){ // if user guess incorrect
 					$(this).css('background-color', '#dc3545'); // set choice background to red
 					hasGuessed = true; // don't let user guess again
 					setTimeout(function(){
 						displayCorrectAnswer();
 					}, 500);
-				}
+				}	
 			});
 
 		});
