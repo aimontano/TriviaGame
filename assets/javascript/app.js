@@ -4,7 +4,7 @@ $(document).ready(function(){
 	let correctAnswer;  // contains correct answer
 
 	let index = 0; // index of questions object array
-	let secondsAvailable = 2; // seconds available
+	let secondsAvailable = 20; // seconds available
 
 	let counterId;  // timer counter interval
 
@@ -26,7 +26,7 @@ $(document).ready(function(){
 	// resets variables 
 	const resetVariables = () => {
 		index = 0;
-		secondsAvailable = 2;
+		secondsAvailable = 20;
 		hasGuessed = false;
 		correctGuess = 0;
 		incorrectGuess = 0;
@@ -110,7 +110,7 @@ $(document).ready(function(){
 		// loads template and gets the results to display to user
 		$('#content').load('./templates/result.html', function(){
 			hasResult = true; // tells program user has the result
-			secondsAvailable = 10; // gives time for user to look at results
+			secondsAvailable = 25; // gives time for user to look at results
 			displayTime(); // display time
 			decrementTime(); // start counting down
 			$('#correct').text(correctGuess); // display correct guesses
@@ -150,7 +150,7 @@ $(document).ready(function(){
 		// if user has guessed
 		if(hasGuessed){
 			clearInterval(counterId); // clear interval
-			secondsAvailable = 2; // restart time 
+			secondsAvailable = 20; // restart time 
 			setTimeout(function(){ // get another question after 1.3 seconds
 				getQuestions();
 			}, 1300);
@@ -168,7 +168,7 @@ $(document).ready(function(){
 			notAnswered++; // add 1 to notAnswered variable
 			displayCorrectAnswer(); // display correct answer
 			setTimeout(function(){ // wait a second
-				secondsAvailable = 2; // reset seconds available to 10
+				secondsAvailable = 20; // reset seconds available to 10
 				getQuestions(); // get another question 
 			}, 1000);
 		}  
