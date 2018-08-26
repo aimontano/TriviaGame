@@ -109,8 +109,8 @@ $(document).ready(function(){
 	const getResult = () => {
 		hasResult = true; // tells program user has the result
 		secondsAvailable = 10; // gives time for user to look at results
-		decrementTime(); // start counting down
 		displayTime(); // display time
+		decrementTime(); // start counting down
 		$('#correct').text(correctGuess); // display correct guesses
 		$('#incorrect').text(incorrectGuess); // display incorrect guesses
 		$('#unanswered').text(notAnswered); // display unanswered questions
@@ -132,8 +132,8 @@ $(document).ready(function(){
 			$('#question').html(question + "<span class='badge badge-warning'>"+secondsAvailable+"</span>");
 
 			getAnswerChoices(); // get answer choices
-			decrementTime(); // start countdown
 			displayTime(); // display time
+			decrementTime(); // start countdown
  
 			index++; // add 1 to index to go to next question	
 		} else { // otherwise
@@ -161,7 +161,6 @@ $(document).ready(function(){
 			clearInterval(counterId); // reset interval
 			startGame(); // start game again
 		}  
-
 
 		// if user has run out of time & has not answered
 		if(secondsAvailable == 0 && !hasGuessed) { 
