@@ -50,7 +50,7 @@ $(document).ready(function(){
 		let choiceIndex = getIndex();
 
 		for(let i = 0; i < answerChoices.length; i++){
-			$('#choice' + (i + 1)).html(answerChoices[choiceIndex[i]]);
+			$('#choice' + (i + 1)).html(answerChoices[choiceIndex[i]]).attr('data-answerChoice', answerChoices[choiceIndex[i]]);
 		}
 	};
 
@@ -61,7 +61,7 @@ $(document).ready(function(){
 
 	// function display questions 
 	const getQuestions = () => {
-		resetStyle();
+		resetStyle(); // each time getQuestion is called resets styles
 		if (index < 10){ 
 			let question = questions.results[index].question;
 			correctAnswer = questions.results[index].correct_answer;
@@ -122,8 +122,7 @@ $(document).ready(function(){
 
 			// if user clicks on one of the choices
 			$('.list-group-item').click(function(){
-				let userGuess = $(this).text(); // store uses guess
-
+				let userGuess = $(this).attr('data-answerChoice'); // store uses guess
 							
 				// check if user guess is correct
 				if(userGuess == correctAnswer && !hasGuessed) {
