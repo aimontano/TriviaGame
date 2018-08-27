@@ -17,12 +17,6 @@ $(document).ready(function(){
 	// query url for getting the random questions 
 	let queryUrl = "https://opentdb.com/api.php?amount=20&category=18&difficulty=easy&type=multiple";
 
-	// ajax request  to get all the questions
-	$.get(queryUrl, function(res){
-		// once questions received set them to questions array 
-		questions = res;
-	});
-
 	// resets variables 
 	const resetVariables = () => {
 		index = 0;
@@ -34,8 +28,8 @@ $(document).ready(function(){
 		hasResult = false;
 	};
 
-	// functions starts the game
-	const startGame = () => {
+	const getContent = (response) => {
+		questions = response; // set ajax response to questions array
 		// loads questions template
 		$('#content').load('./templates/questions.html', function(){
 			hasResult = false; // each time it runs resets variable to false
@@ -62,6 +56,11 @@ $(document).ready(function(){
 				}	
 			});				
 		});
+	};
+
+	// functions starts the game
+	const startGame = () => { 
+		$.ajax({url: queryUrl, method: 'GET'}).then(getContent); // request data then call getContent function
 	};	
 
 	// function returns an array with random index number 
@@ -191,7 +190,6 @@ $(document).ready(function(){
 			}
 		}
 	};
-
 	// when user clicks on start button start game
 	$('#start').click(startGame);
 });
